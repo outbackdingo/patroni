@@ -8,16 +8,19 @@
 # The cluster could be started as:
 # $ docker-compose -f docker-compose-citus.yml up -d
 # You can read more about it in the:
-# https://github.com/patroni/patroni/blob/master/docker/README.md#citus-cluster
-version: "2"
+# https://github.com/zalando/patroni/blob/master/docker/README.md#citus-cluster
+version: "3"
 
 networks:
     demo:
 
 services:
     etcd1: &etcd
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - 2379
+            - 2380
         environment:
             ETCD_LISTEN_PEER_URLS: http://0.0.0.0:2380
             ETCD_LISTEN_CLIENT_URLS: http://0.0.0.0:2379
@@ -32,17 +35,23 @@ services:
     etcd2:
         <<: *etcd
         container_name: demo-etcd2
+        ports:
+            - 2379
+            - 2380        
         hostname: etcd2
         command: etcd --name etcd2 --initial-advertise-peer-urls http://etcd2:2380
 
     etcd3:
         <<: *etcd
         container_name: demo-etcd3
+        ports:
+            - 2379
+            - 2380        
         hostname: etcd3
         command: etcd --name etcd3 --initial-advertise-peer-urls http://etcd3:2380
 
     haproxy:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
         env_file: docker/patroni.env
         hostname: haproxy
@@ -63,8 +72,10 @@ services:
             PGSSLROOTCERT: /etc/ssl/certs/ssl-cert-snakeoil.pem
 
     coord1:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - "5432"
         env_file: docker/patroni.env
         hostname: coord1
         container_name: demo-coord1
@@ -74,8 +85,10 @@ services:
             PATRONI_CITUS_GROUP: 0
 
     coord2:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - "5432"
         env_file: docker/patroni.env
         hostname: coord2
         container_name: demo-coord2
@@ -84,8 +97,10 @@ services:
             PATRONI_NAME: coord2
 
     coord3:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - "5432"
         env_file: docker/patroni.env
         hostname: coord3
         container_name: demo-coord3
@@ -95,8 +110,10 @@ services:
 
 
     work1-1:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - "5432"
         env_file: docker/patroni.env
         hostname: work1-1
         container_name: demo-work1-1
@@ -106,8 +123,10 @@ services:
             PATRONI_CITUS_GROUP: 1
 
     work1-2:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - "5432"
         env_file: docker/patroni.env
         hostname: work1-2
         container_name: demo-work1-2
@@ -117,8 +136,10 @@ services:
 
 
     work2-1:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - "5432"
         env_file: docker/patroni.env
         hostname: work2-1
         container_name: demo-work2-1
@@ -128,8 +149,10 @@ services:
             PATRONI_CITUS_GROUP: 2
 
     work2-2:
-        image: ${PATRONI_TEST_IMAGE:-patroni-citus}
+        image: harbor.optimcloud.com/library/optim/patroni-citus:latest
         networks: [ demo ]
+        ports:
+            - "5432"
         env_file: docker/patroni.env
         hostname: work2-2
         container_name: demo-work2-2

@@ -68,7 +68,7 @@ bootstrap:
       #- host replication replicator 127.0.0.1/32 gss include_realm=0
       #- host all all 0.0.0.0/0 gss include_realm=0
       - host replication replicator 127.0.0.1/32 md5
-      - host all all 0.0.0.0/0 md5
+      - host all all 0.0.0.0/0 trust
       #  - hostssl all all 0.0.0.0/0 md5
 #      use_slots: true
       parameters:
